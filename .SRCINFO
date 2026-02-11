@@ -1,0 +1,21 @@
+pkgbase = qcom-adreno-opencl-bin
+	pkgdesc = Qualcomm Adreno GPU OpenCL driver (prebuilt binary)
+	pkgver = 1.838.3
+	pkgrel = 1
+	url = https://softwarecenter.qualcomm.com
+	arch = aarch64
+	license = LicenseRef-Qualcomm-EULA
+	makedepends = patchelf
+	depends = qcom-libdmabufheap
+	depends = glib2
+	depends = zlib
+	provides = opencl-driver
+	noextract = qcom-adreno_1.838.3_armv8-2a.tar.gz
+	noextract = qcom-adreno_1.838.3_qcm6490.tar.gz
+	options = !strip
+	source = https://qartifactory-edge.qualcomm.com/artifactory/qsc_releases/software/chip/component/gfx-adreno.le.0.0/251203/prebuilt_yocto/qcom-adreno_1.838.3_armv8-2a.tar.gz
+	source = https://softwarecenter.qualcomm.com/nexus/generic/software/chip/qualcomm_linux-spf-1-0/qualcomm-linux-spf-1-0_test_device_public/r1.0_00114.0/le-qclinux-1-0-r1/apps_proc/prebuilt_HY22/qcom-adreno/251215/qcom-adreno_1.838.3_qcm6490.tar.gz
+	sha256sums = 770e31ac848cc1aa0e94bde840222f8f0e9af411592fa7ede9bfe509c00b87d2
+	sha256sums = 3d55e1ef9f33b3fad2b9245c04169b540cfb73b7b1a1b5028f00d16ec8848874
+
+pkgname = qcom-adreno-opencl-bin
