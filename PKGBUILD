@@ -1,11 +1,11 @@
 # Maintainer: Xilin Wu <sophon@radxa.com>
 # Upstream: Qualcomm Adreno GPU OpenCL prebuilt binaries
 # Sources:
-#   armv8-2a  – generic Adreno prebuilt (gfx-adreno.le.0.0)
+#   armv8a    – generic Adreno prebuilt (gfx-adreno.le.0.0)
 #   qcm6490   – SPF platform prebuilt  (qualcomm-linux-spf-1-0)
 
 pkgname=qcom-adreno-opencl-bin
-pkgver=1.838.3
+pkgver=1.855.1
 pkgrel=1
 pkgdesc="Qualcomm Adreno GPU OpenCL driver (prebuilt binary)"
 arch=('aarch64')
@@ -17,21 +17,21 @@ provides=('opencl-driver')
 conflicts=()
 options=('!strip')
 
-_armv8_datestamp=251203
+_armv8_datestamp=260215
 _qcm6490_datestamp=251215
 _spfrel=r1.0_00114.0
 
-source=("https://qartifactory-edge.qualcomm.com/artifactory/qsc_releases/software/chip/component/gfx-adreno.le.0.0/${_armv8_datestamp}/prebuilt_yocto/qcom-adreno_${pkgver}_armv8-2a.tar.gz"
-        "https://softwarecenter.qualcomm.com/nexus/generic/software/chip/qualcomm_linux-spf-1-0/qualcomm-linux-spf-1-0_test_device_public/${_spfrel}/le-qclinux-1-0-r1/apps_proc/prebuilt_HY22/qcom-adreno/${_qcm6490_datestamp}/qcom-adreno_${pkgver}_qcm6490.tar.gz")
-sha256sums=('770e31ac848cc1aa0e94bde840222f8f0e9af411592fa7ede9bfe509c00b87d2'
+source=("https://qartifactory-edge.qualcomm.com/artifactory/qsc_releases/software/chip/component/gfx-adreno.le.0.0/${_armv8_datestamp}/prebuilt_yocto/qcom-adreno_${pkgver}_armv8a.tar.gz"
+        "https://softwarecenter.qualcomm.com/nexus/generic/software/chip/qualcomm_linux-spf-1-0/qualcomm-linux-spf-1-0_test_device_public/${_spfrel}/le-qclinux-1-0-r1/apps_proc/prebuilt_HY22/qcom-adreno/${_qcm6490_datestamp}/qcom-adreno_1.838.3_qcm6490.tar.gz")
+sha256sums=('825574743eecfeaef93201843a27f3b6cdebfae151a70846610da55cd467a7f2'
             '3d55e1ef9f33b3fad2b9245c04169b540cfb73b7b1a1b5028f00d16ec8848874')
-noextract=("qcom-adreno_${pkgver}_armv8-2a.tar.gz"
-           "qcom-adreno_${pkgver}_qcm6490.tar.gz")
+noextract=("qcom-adreno_${pkgver}_armv8a.tar.gz"
+           "qcom-adreno_1.838.3_qcm6490.tar.gz")
 
 prepare() {
   mkdir -p armv8 qcm6490
-  tar xzf "$srcdir/qcom-adreno_${pkgver}_armv8-2a.tar.gz"  -C armv8
-  tar xzf "$srcdir/qcom-adreno_${pkgver}_qcm6490.tar.gz"   -C qcm6490
+  tar xzf "$srcdir/qcom-adreno_${pkgver}_armv8a.tar.gz"  -C armv8
+  tar xzf "$srcdir/qcom-adreno_1.838.3_qcm6490.tar.gz"   -C qcm6490
 }
 
 package() {
