@@ -6,15 +6,15 @@
 
 pkgname=qcom-adreno-opencl-bin
 pkgver=1.855.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Qualcomm Adreno GPU OpenCL driver (prebuilt binary)"
 arch=('aarch64')
 url="https://softwarecenter.qualcomm.com"
 license=('LicenseRef-Qualcomm-EULA')
 depends=('qcom-libdmabufheap' 'glib2' 'zlib')
 makedepends=('patchelf')
-provides=('opencl-driver')
-conflicts=()
+provides=('opencl-driver' 'opencl-icd-loader' 'ocl-icd')
+conflicts=('ocl-icd')
 options=('!strip')
 
 _armv8_datestamp=260215
@@ -40,6 +40,15 @@ package() {
 
   install -dm755 "$pkgdir/usr/lib"
 
+  install -Dm644 "$_armv8/usr/include/CL/cl_ext_qcom.h" \
+    "$pkgdir/usr/include/CL/cl_ext_qcom.h"
+
+  install -Dm644 "$_qcm6490/usr/lib/pkgconfig/opencl.pc" \
+    "$pkgdir/usr/lib/pkgconfig/OpenCL.pc"
+
+  install -Dm644 "$_qcm6490/usr/lib/pkgconfig/adreno_utils.pc" \
+    "$pkgdir/usr/lib/pkgconfig/adreno_utils.pc"
+
   # LLVM backends
   for _lib in libllvm-qcom.so.1 libllvm-glnext.so.1 libllvm-qgl.so.1; do
     install -Dm755 "$_armv8/usr/lib/$_lib" "$pkgdir/usr/lib/$_lib"
@@ -54,14 +63,15 @@ package() {
   # Install Qualcomm's OpenCL loader from qcm6490 tarball, renamed to
   # avoid conflict with the system ocl-icd (which owns libOpenCL.so).
   install -Dm755 "$_qcm6490/usr/lib/libOpenCL.so.1" \
-    "$pkgdir/usr/lib/libOpenCL_qcom.so.1"
+    "$pkgdir/usr/lib/libOpenCL.so.1"
+  ln -s "libOpenCL.so.1" "$pkgdir/usr/lib/libOpenCL.so"
 
   # Install Adreno OpenCL ICD driver and patch its dependency on the
   # renamed loader.
   install -Dm755 "$_armv8/usr/lib/libOpenCL_adreno.so.1" \
     "$pkgdir/usr/lib/libOpenCL_adreno.so.1"
-  patchelf --replace-needed libOpenCL.so.1 libOpenCL_qcom.so.1 \
-    "$pkgdir/usr/lib/libOpenCL_adreno.so.1"
+  # patchelf --replace-needed libOpenCL.so.1 libOpenCL_qcom.so.1 \
+  #   "$pkgdir/usr/lib/libOpenCL_adreno.so.1"
 
   install -Dm644 "$_armv8/etc/OpenCL/vendors/adrenocl.icd" \
     "$pkgdir/etc/OpenCL/vendors/adrenocl.icd"
