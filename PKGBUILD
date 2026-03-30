@@ -5,8 +5,8 @@
 #   qcm6490   – SPF platform prebuilt  (qualcomm-linux-spf-1-0)
 
 pkgname=qcom-adreno-opencl-bin
-pkgver=1.855.1
-pkgrel=2
+pkgver=1.855.3
+pkgrel=1
 pkgdesc="Qualcomm Adreno GPU OpenCL driver (prebuilt binary)"
 arch=('aarch64')
 url="https://softwarecenter.qualcomm.com"
@@ -17,13 +17,13 @@ provides=('opencl-driver' 'opencl-icd-loader' 'ocl-icd')
 conflicts=('ocl-icd')
 options=('!strip')
 
-_armv8_datestamp=260215
+_armv8_datestamp=260318
 _qcm6490_datestamp=251215
 _spfrel=r1.0_00114.0
 
 source=("https://qartifactory-edge.qualcomm.com/artifactory/qsc_releases/software/chip/component/gfx-adreno.le.0.0/${_armv8_datestamp}/prebuilt_yocto/qcom-adreno_${pkgver}_armv8a.tar.gz"
         "https://softwarecenter.qualcomm.com/nexus/generic/software/chip/qualcomm_linux-spf-1-0/qualcomm-linux-spf-1-0_test_device_public/${_spfrel}/le-qclinux-1-0-r1/apps_proc/prebuilt_HY22/qcom-adreno/${_qcm6490_datestamp}/qcom-adreno_1.838.3_qcm6490.tar.gz")
-sha256sums=('825574743eecfeaef93201843a27f3b6cdebfae151a70846610da55cd467a7f2'
+sha256sums=('f211be698ebbcefa2e4afcdfc7a1529e6a9bc628d47bcab9234fe29aceb4008e'
             '3d55e1ef9f33b3fad2b9245c04169b540cfb73b7b1a1b5028f00d16ec8848874')
 noextract=("qcom-adreno_${pkgver}_armv8a.tar.gz"
            "qcom-adreno_1.838.3_qcm6490.tar.gz")
