@@ -5,25 +5,24 @@
 #   qcm6490   – SPF platform prebuilt  (qualcomm-linux-spf-1-0)
 
 pkgname=qcom-adreno-opencl-bin
-pkgver=1.855.3
+pkgver=1.887.1
 pkgrel=1
 pkgdesc="Qualcomm Adreno GPU OpenCL driver (prebuilt binary)"
 arch=('aarch64')
 url="https://softwarecenter.qualcomm.com"
 license=('LicenseRef-Qualcomm-EULA')
-depends=('qcom-libdmabufheap' 'glib2' 'zlib')
-makedepends=('patchelf')
+depends=('glib2' 'zlib')
 provides=('opencl-driver' 'opencl-icd-loader' 'ocl-icd')
 conflicts=('ocl-icd')
 options=('!strip')
 
-_armv8_datestamp=260318
+_armv8_datestamp=260903
 _qcm6490_datestamp=251215
 _spfrel=r1.0_00114.0
 
 source=("https://qartifactory-edge.qualcomm.com/artifactory/qsc_releases/software/chip/component/gfx-adreno.le.0.0/${_armv8_datestamp}/prebuilt_yocto/qcom-adreno_${pkgver}_armv8a.tar.gz"
         "https://softwarecenter.qualcomm.com/nexus/generic/software/chip/qualcomm_linux-spf-1-0/qualcomm-linux-spf-1-0_test_device_public/${_spfrel}/le-qclinux-1-0-r1/apps_proc/prebuilt_HY22/qcom-adreno/${_qcm6490_datestamp}/qcom-adreno_1.838.3_qcm6490.tar.gz")
-sha256sums=('f211be698ebbcefa2e4afcdfc7a1529e6a9bc628d47bcab9234fe29aceb4008e'
+sha256sums=('c699bfcdf69f3c4c272d2b5614d0405619950369ae2cdced6a0930f499ee30f5'
             '3d55e1ef9f33b3fad2b9245c04169b540cfb73b7b1a1b5028f00d16ec8848874')
 noextract=("qcom-adreno_${pkgver}_armv8a.tar.gz"
            "qcom-adreno_1.838.3_qcm6490.tar.gz")
@@ -49,16 +48,19 @@ package() {
   install -Dm644 "$_qcm6490/usr/lib/pkgconfig/adreno_utils.pc" \
     "$pkgdir/usr/lib/pkgconfig/adreno_utils.pc"
 
-  # LLVM backends
-  for _lib in libllvm-qcom.so.1 libllvm-glnext.so.1 libllvm-qgl.so.1; do
+  # OpenCL runtime and dynamically loaded compiler components.
+  for _lib in libgsl.so.1 libadreno_utils.so.1 libCB.so.1 \
+              libq3dtools_adreno.so.1 libq3dtools_esx.so.1 \
+              libQCGPUCompiler.so.1 libQCGPUCompilerCore.so.1 \
+              libqclccompiler.so.1 libqclccompiler-lgc.so.1 \
+              libqgpucompiler-lgc.so.1 libqgpucompilercore-lgc.so.1 \
+              libkcl.so.1 libkernelmanager.so.1; do
     install -Dm755 "$_armv8/usr/lib/$_lib" "$pkgdir/usr/lib/$_lib"
   done
 
-  # GPU support libraries
-  for _lib in libgsl.so.1 libadreno_utils.so.1 libCB.so.1 \
-              libq3dtools_adreno.so.1 libq3dtools_esx.so.1; do
-    install -Dm755 "$_armv8/usr/lib/$_lib" "$pkgdir/usr/lib/$_lib"
-  done
+  # Qualcomm's compiler plugins dlopen this library without its SONAME.
+  ln -s "libQCGPUCompilerCore.so.1" \
+    "$pkgdir/usr/lib/libQCGPUCompilerCore.so"
 
   # Install Qualcomm's OpenCL loader from qcm6490 tarball, renamed to
   # avoid conflict with the system ocl-icd (which owns libOpenCL.so).
@@ -70,9 +72,6 @@ package() {
   # renamed loader.
   install -Dm755 "$_armv8/usr/lib/libOpenCL_adreno.so.1" \
     "$pkgdir/usr/lib/libOpenCL_adreno.so.1"
-  # patchelf --replace-needed libOpenCL.so.1 libOpenCL_qcom.so.1 \
-  #   "$pkgdir/usr/lib/libOpenCL_adreno.so.1"
-
   install -Dm644 "$_armv8/etc/OpenCL/vendors/adrenocl.icd" \
     "$pkgdir/etc/OpenCL/vendors/adrenocl.icd"
 
